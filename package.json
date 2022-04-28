@@ -1,5 +1,6 @@
 {
-  "name": "qr-scanner",
+  "name": "qr-scanner-rxb",
+  "homepage": "https://cere-io.github.io/qr-scanner-rxb/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
