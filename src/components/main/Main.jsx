@@ -183,7 +183,6 @@ const Main = () => {
                     </div>
                 </div>)}
 
-
             {getUserId() &&
                 <div className="navbar-sign" style={{paddingBottom: 50}}>
                     <button onClick={hide}>Show QR Scanner</button>
