@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import './main.css'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import {initSdkQr, SDK} from "../../service/cere-integration-service";
 import {QrReader} from 'react-qr-reader';
 import {
