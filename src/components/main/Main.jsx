@@ -183,7 +183,7 @@ const Main = () => {
                     </div>
                 </div>)}
 
-            {getUserId() &&
+            {getEventId() &&
                 <div className="navbar-sign" style={{paddingBottom: 50}}>
                     <button onClick={hide}>Show QR Scanner</button>
                     <button onClick={logout}>Log out {userData}/{location}/{event}</button>
