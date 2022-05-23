@@ -4,7 +4,7 @@
  * Use 2095 for testing.
  * @type {string}
  */
-const applicationId = '2095';
+const applicationId = '2354';
 
 /**
  * Predefined user id for integration purpose.
@@ -37,7 +37,7 @@ export const EVENT = 'QR_CODE_VALIDATOR_ENTERED';
  * Publicly available cere sdk location
  * @type {string}
  */
-const CERE_SDK_URL = "https://sdk.dev.cere.io/v5.0.0/web.js";
+const CERE_SDK_URL = "https://sdk.dev.cere.io/v5.1.1/web.js";
 
 export const SDK = {};
 
