@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './main.css';
-import {initSdkQr, SDK} from '../../service/cere-integration-service';
+import {initSdkQr, SDK} from '../../services/cere-integration-service';
 import {QrReader} from 'react-qr-reader';
 import {
   clearStorage,
@@ -10,7 +10,7 @@ import {
   setEventId,
   setLocationId,
   setUserId,
-} from '../../service/local-storage-service';
+} from '../../services/local-storage-service';
 import {Button} from '@mui/material';
 
 const Main = () => {
