@@ -4,7 +4,7 @@
  * Use 2095 for testing.
  * @type {string}
  */
-const applicationId = '2354';
+const applicationId = '2095';
 
 /**
  * Predefined user id for integration purpose.
@@ -37,73 +37,71 @@ export const EVENT = 'QR_CODE_VALIDATOR_ENTERED';
  * Publicly available cere sdk location
  * @type {string}
  */
-const CERE_SDK_URL = "https://sdk.dev.cere.io/v5.1.1/web.js";
+const CERE_SDK_URL = 'https://sdk.dev.cere.io/v5.10.0/web.js';
 
 export const SDK = {};
 
 function initCereSdk(type, externalUserId, token) {
-    return window.CereSDK.web.cereWebSDK(applicationId, userId, {
-        authMethod: {
-            type: type,
-            externalUserId: externalUserId,
-            token: token
-        },
-        deployment: 'dev'
-    });
+  return window.CereSDK.web.cereWebSDK(applicationId, userId, {
+    authMethod: {
+      type: type,
+      externalUserId: externalUserId,
+      token: token,
+    },
+    deployment: 'dev',
+  });
 }
 
 export function sendQrCodeEvent(data, sdk) {
-    let parse = JSON.parse(data);
-    let request = {
-        eventId: 'SPRING_AWAKENING',
-        locationId: 'STAGE_1',
-        userId: parse.userId,
-        qrDataJSON: data,
-    };
+  let parse = JSON.parse(data);
+  let request = {
+    eventId: 'SPRING_AWAKENING',
+    locationId: 'STAGE_1',
+    userId: parse.userId,
+    qrDataJSON: data,
+  };
 
-    // @ts-ignore
-    sdk?.sendEvent('QR_CODE_VALIDATOR_ENTERED', request);
+  // @ts-ignore
+  sdk?.sendEvent('QR_CODE_VALIDATOR_ENTERED', request);
 }
 
 export function initSdkQr(externalUserId, token, onEngagementFunction, onKeyPairFunction) {
-    setTimeout(() => {
+  setTimeout(() => {
+    const script = createScriptElement();
 
-        const script = createScriptElement();
+    let sdk;
 
-        let sdk;
+    script.addEventListener('load', (event) => {
+      try {
+        /**
+         * Init SDK with parameters provided.
+         */
+        sdk = initCereSdk(type, externalUserId, token);
+        SDK.it = sdk;
 
-        script.addEventListener('load', (event) => {
-            try {
-                /**
-                 * Init SDK with parameters provided.
-                 */
-                sdk = initCereSdk(type, externalUserId, token);
-                SDK.it = sdk;
-
-                sdk.onGetUserKeypair((keyPair) => {
-                    SDK.keyPair = keyPair;
-                    onKeyPairFunction(keyPair);
-                });
-
-            } catch (error) {
-                console.log('SDK initialisation failed: ' + error);
-            }
-
-            /**
-             * Specify the action after engagement data received.
-             * Please note: this action happens asynchronously.
-             */
-            sdk.onEngagement((template) => {
-                onEngagementFunction(template);
-            });
+        sdk.onGetUserKeypair((keyPair) => {
+          SDK.keyPair = keyPair;
+          onKeyPairFunction(keyPair);
         });
+      } catch (error) {
+        console.log('SDK initialisation failed: ' + error);
+      }
 
-        document.head.appendChild(script)
+      /**
+       * Specify the action after engagement data received.
+       * Please note: this action happens asynchronously.
+       */
+      sdk.onEngagement((template) => {
+        onEngagementFunction(template);
+      });
+    });
 
-        return () => {
-            document.body.removeChild(script);
-        }
-    }, 700);
+    document.head.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, 700);
 }
 /**
  * Create js tag with content dynamically.
@@ -111,10 +109,10 @@ export function initSdkQr(externalUserId, token, onEngagementFunction, onKeyPair
  * @returns {HTMLScriptElement}
  */
 function createScriptElement() {
-    let script = document.createElement('script');
-    script.src = CERE_SDK_URL;
-    script.async = true;
-    return script;
+  let script = document.createElement('script');
+  script.src = CERE_SDK_URL;
+  script.async = true;
+  return script;
 }
 
 /**
@@ -124,8 +122,21 @@ function createScriptElement() {
  * @returns {string}
  */
 export function getNftUrl(applicantId, email) {
-    const nftUrl = "https://client.davinci.dev.cere.network/?event=test_exhibition_dont_delete_live";
-    const redirectHost = "https://integration.dev.cere.io";
-    return nftUrl + "&redirectUrl=" + encodeURIComponent(redirectHost + "/?off=true&type=" + type + "&token=" +
-        token + "&externalUserId=" + applicantId + "&email=" + encodeURIComponent(email))
+  const nftUrl = 'https://client.davinci.dev.cere.network/?event=test_exhibition_dont_delete_live';
+  const redirectHost = 'https://integration.dev.cere.io';
+  return (
+    nftUrl +
+    '&redirectUrl=' +
+    encodeURIComponent(
+      redirectHost +
+        '/?off=true&type=' +
+        type +
+        '&token=' +
+        token +
+        '&externalUserId=' +
+        applicantId +
+        '&email=' +
+        encodeURIComponent(email),
+    )
+  );
 }
