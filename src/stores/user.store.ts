@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, reaction, when} from 'mobx';
 import {APP_ID} from '../environment';
 
 // @ts-ignore
@@ -6,23 +6,26 @@ import * as web from '@cere/sdk-js/dist/web';
 import {AuthApiService} from '../api/auth-api.service';
 import type {CereSDK} from '@cere/sdk-js/dist/src';
 import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
+import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
 
 export class UserStore {
   private _sdkInstance: CereSDK | null = null;
   private _userEmail: string | null = null;
   private _userSdkSubscription: UnsubscribeEngagementHandler | undefined = undefined;
-  public _userSdkEvents: string[] = [];
+  private _otpCodeSendTime: null | Date = null;
+  private _userSdkEvents: Record<string, any>[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  public login = async ({email, code}: {email: string; code?: string}) => {
-    if (!code) {
-      await new AuthApiService().sendOtp(email);
-      return;
-    }
+  public async sendOtpCode({email}: {email: string}) {
+    this._userEmail = email;
+    await new AuthApiService().sendOtp(email);
+    this._otpCodeSendTime = new Date();
+  }
 
+  public login = async ({email, code}: {email: string; code: string}) => {
     try {
       this._sdkInstance = web.cereWebSDK(APP_ID, undefined, {
         authMethod: {
@@ -40,8 +43,17 @@ export class UserStore {
     console.log('sdkInstance', this._sdkInstance);
 
     this._userSdkSubscription = this._sdkInstance?.onEngagement((htmlTemplate) => {
-      this._userSdkEvents.push(htmlTemplate);
-      console.log('events', this._userSdkEvents);
+      try {
+        const jsonData = htmlTemplate.replace(/(<([^>]+)>)/gi, '');
+        const data = JSON.parse(jsonData);
+        console.log('Event data from SDK', data);
+
+        if (data.trigger === SdkTriggerEnum.DAVINCI_QR_CODE_VALIDATOR) {
+          this._userSdkEvents.push(data);
+        }
+      } catch (e) {
+        console.error("Cannot parse response from sdk, it's not a JSON format");
+      }
     }, {});
   };
 
@@ -56,7 +68,7 @@ export class UserStore {
   }
 
   public get isAuth() {
-    return !!this._userEmail;
+    return !!this._userEmail && !!this._sdkInstance;
   }
 
   public get sdkInstance(): CereSDK {
@@ -66,7 +78,7 @@ export class UserStore {
     return this._sdkInstance;
   }
 
-  public get lastEvent(): string | undefined {
+  public get lastEvent(): Record<string, any> | undefined {
     // const text = '<body><b>some text</b></body>';
     // return text;
     return this._userSdkEvents[this._userSdkEvents.length - 1];
