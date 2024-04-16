@@ -1,7 +1,7 @@
+import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
 import {makeAutoObservable, when} from 'mobx';
 
 // @ts-ignore
-import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
 import {UserStore} from './user.store';
 import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
 
