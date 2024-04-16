@@ -1,5 +1,7 @@
 import packageJson from '../package.json';
 import {AppRouter} from './router';
+import {theme} from './theme';
+import {ThemeProvider} from '@mui/material';
 
 export function App() {
   console.log(
@@ -9,7 +11,9 @@ export function App() {
 
   return (
     <>
-      <AppRouter />
+      <ThemeProvider theme={theme}>
+        <AppRouter />
+      </ThemeProvider>
     </>
   );
 }

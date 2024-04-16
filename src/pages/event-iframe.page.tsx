@@ -8,5 +8,6 @@ export const EventIframePage = observer(() => {
   if (!userStore.lastEvent) {
     return <></>;
   }
-  return <div dangerouslySetInnerHTML={{__html: userStore.lastEvent}}></div>;
+  return <></>;
+  // return <div dangerouslySetInnerHTML={{__html: userStore.lastEvent}}></div>;
 });
