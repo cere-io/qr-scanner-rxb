@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import {API_IDENTITY_URL, APP_ID} from '../environment';
 
 const api = axios.create({

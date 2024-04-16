@@ -1,12 +1,12 @@
-import {makeAutoObservable, reaction, when} from 'mobx';
-import {APP_ID} from '../environment';
-
-// @ts-ignore
-import * as web from '@cere/sdk-js/dist/web';
-import {AuthApiService} from '../api/auth-api.service';
 import type {CereSDK} from '@cere/sdk-js/dist/src';
 import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
+// @ts-ignore
+import * as web from '@cere/sdk-js/dist/web';
+import {makeAutoObservable} from 'mobx';
+
+import {AuthApiService} from '../api/auth-api.service';
 import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
+import {APP_ID} from '../environment';
 
 export class UserStore {
   private _sdkInstance: CereSDK | null = null;
