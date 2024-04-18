@@ -14,7 +14,7 @@ export const VerifyPage = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 gap-4">
+    <div className="flex flex-col p-5 gap-2">
       <div className="flex flex-col">
         <div className="flex flex-row justify-between items-center gap-4">
           <Tooltip title="Return back to the welcom page">
@@ -25,9 +25,13 @@ export const VerifyPage = () => {
           <Typography variant="h5">Verify Your Address</Typography>
           <span className="w-6">&nbsp;</span>
         </div>
-        <div className="flex flex-col text-center">
-          <Typography variant="body2" color="gray">
-            {`A verification code has been sent to your email address: ${userStore.email}`}
+        <div className="text-center">
+          <Typography component="span" variant="body1" color="gray">
+            A verification code has been sent to your email address
+          </Typography>
+          &nbsp;
+          <Typography component="span" variant="body1">
+            {userStore.email}
           </Typography>
         </div>
       </div>

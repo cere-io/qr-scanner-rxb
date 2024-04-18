@@ -7,6 +7,25 @@ export const theme = createTheme({
       light: '#c4b4f1',
     },
   },
+  typography: {
+    fontFamily: 'HumanSans, Inter, Roboto, Helvetica, Arial, sans-serif',
+    h5: {
+      fontWeight: 500,
+      fontSize: '24px',
+    },
+    h6: {
+      fontWeight: 500,
+      fontSize: '20px',
+    },
+    body1: {
+      fontWeight: 400,
+      fontSize: '16px',
+    },
+    body2: {
+      fontWeight: 400,
+      fontSize: '12px',
+    },
+  },
   components: {
     MuiTextField: {
       styleOverrides: {
@@ -21,7 +40,9 @@ export const theme = createTheme({
       styleOverrides: {
         sizeLarge: {
           borderRadius: '12px',
-          padding: '11px',
+          fontSize: '16px',
+          fontWeight: 500,
+          padding: '11px 30px 11px 30px',
           textTransform: 'none',
         },
       },

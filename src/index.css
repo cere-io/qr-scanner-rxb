@@ -1,8 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   background-color: #f8f9fb;
+}
+
+@layer utilities {
+  .video-square {
+    video {
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+  }
+}
+
+@layer components {
+  .corner-only-border {
+    --s: 40px; /* the size on the corner */
+    --t: 3px; /* the thickness of the border */
+    --g: 0; /* the gap between the border and image */
+
+    /*padding: calc(var(--g) + var(--t));*/
+    /*outline: var(--t) solid #B38184; !* the color here *!*/
+    outline-offset: calc(-1 * var(--t));
+    mask:
+      conic-gradient(at var(--s) var(--s), #0000 75%, #000 0) 0 0 / calc(100% - var(--s)) calc(100% - var(--s)),
+      linear-gradient(#000 0 0) content-box;
+  }
 }
