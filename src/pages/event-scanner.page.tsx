@@ -31,20 +31,31 @@ export const EventScannerPage = observer(() => {
     // FIXME remove this code
     onQRCodeScan({
       nftId: '4',
-      collectionId: '0xd1A5b1a915875d46b2dC02994B7CC0ffD1d24882',
+      collectionId: '0x580711df26c49c4718e8bbef73c4306cadfef6ae',
       wallet: '0x61af9b220e67d9f8c69fca4adf93e2aaddc7fa70',
-      timestamp: 1712925658605,
-      eventId: '29',
+      timestamp: 1713404107964,
+      eventId: '31',
       signature:
-        '0x764840c88258b90196317c5cd8ff6c49e64ad20e36345b11897f5f8b6b2ec84e7ff3ecbc04ec80ef219c005aed58b54d8eb7c145c7dcbbff770ec922559e84191b',
+        '0x81204556dec77a76a4ebde4cf5c636957c611952f7f3bf418f64f7c1acbdda3a61416d4356566489791fcd5e38b8d06e1aa7cf8e65c1d865ebf6e9b40cf6280a1c',
     });
+    // onQRCodeScan({
+    //   nftId: '4',
+    //   collectionId: '0xd1A5b1a915875d46b2dC02994B7CC0ffD1d24882',
+    //   wallet: '0x61af9b220e67d9f8c69fca4adf93e2aaddc7fa70',
+    //   timestamp: 1712925658605,
+    //   eventId: '29',
+    //   signature:
+    //     '0x764840c88258b90196317c5cd8ff6c49e64ad20e36345b11897f5f8b6b2ec84e7ff3ecbc04ec80ef219c005aed58b54d8eb7c145c7dcbbff770ec922559e84191b',
+    // })
   };
 
   const backHandler = () => {
     navigate({...location, pathname: '/events'});
   };
 
-  const completeScanHandler = () => {};
+  const completeScanHandler = () => {
+    scannerStore.useTicket();
+  };
 
   return (
     <div className="flex flex-col p-5 gap-3">
@@ -99,7 +110,7 @@ export const EventScannerPage = observer(() => {
             </Button>
           </>
         )}
-        {scannerStore.status === ScannerStatusEnum.SUCCESS && (
+        {[ScannerStatusEnum.SUCCESS, ScannerStatusEnum.USE_TICKET_PROCESSING].includes(scannerStore.status) && (
           <>
             <div className="flex flex-col aspect-square justify-center bg-green-100 items-center rounded-2xl border-[3px] border-green-600 corner-only-border">
               <img className="w-[150px] h-[150px]" src="/images/scan-success.png" alt="" />
@@ -109,8 +120,21 @@ export const EventScannerPage = observer(() => {
               <Typography variant="body1">Valid Ticket</Typography>
               <div className="w-6">&nbsp;</div>
             </div>
-            <Button variant="contained" color="primary" size="large" onClick={() => completeScanHandler()}>
-              Complete Scan
+            <Button
+              variant="contained"
+              disabled={scannerStore.status === ScannerStatusEnum.USE_TICKET_PROCESSING}
+              color="primary"
+              size="large"
+              onClick={() => completeScanHandler()}
+            >
+              {scannerStore.status === ScannerStatusEnum.USE_TICKET_PROCESSING ? (
+                <CircularProgress color="primary" />
+              ) : (
+                'Complete Scan'
+              )}
+            </Button>
+            <Button variant="outlined" color="primary" size="large" onClick={() => scannerStore.ready()}>
+              Cancel
             </Button>
           </>
         )}

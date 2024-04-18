@@ -8,7 +8,7 @@ import {ScannerStatusEnum} from '../enums/scanner-status.enum';
 
 export class ScannerStore {
   private _eventSubscription: UnsubscribeEngagementHandler | undefined;
-  private _scanResult: any;
+  private _scanResult: Record<string, any> | undefined;
   private _status: ScannerStatusEnum = ScannerStatusEnum.INIT;
   private _errorMessage: string | undefined = undefined;
   constructor(private userStore: UserStore) {
@@ -42,7 +42,7 @@ export class ScannerStore {
               }
             }
             if (response.trigger === SdkTriggerEnum.TICKET_USE) {
-              // some logic here
+              this.ready();
             }
           } catch (e) {
             console.error("Cannot parse response from sdk, it's not a JSON format");
@@ -56,6 +56,7 @@ export class ScannerStore {
     const trigger = SdkTriggerEnum.TICKET_CHECK;
     this.userStore.sdkInstance.sendEvent(trigger, {...data, trigger});
     this._status = ScannerStatusEnum.PROCESSING;
+    this._scanResult = data;
   }
   public get status(): ScannerStatusEnum {
     return this._status;
@@ -63,7 +64,16 @@ export class ScannerStore {
 
   public ready(): void {
     this._status = ScannerStatusEnum.READY;
+    this._scanResult = undefined;
     this._errorMessage = undefined;
+  }
+
+  public useTicket(): void {
+    if (this._status === ScannerStatusEnum.SUCCESS) {
+      const trigger = SdkTriggerEnum.TICKET_USE;
+      this.userStore.sdkInstance.sendEvent(trigger, {...this._scanResult, trigger});
+      this._status = ScannerStatusEnum.USE_TICKET_PROCESSING;
+    }
   }
 
   public get errorMessage(): string | undefined {
