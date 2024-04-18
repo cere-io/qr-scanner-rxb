@@ -1,16 +1,13 @@
 import React from 'react';
-import {Tooltip, Typography} from '@mui/material';
+import {Typography} from '@mui/material';
 import {ReactComponent as ArrowLeft} from './../assets/arrow-left.svg';
-import {VerifyComponent} from '../components/verify';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {useUserStore} from '../hooks/use-user-store';
 import {useEventStore} from '../hooks/use-event-store';
 import {observer} from 'mobx-react-lite';
 
 export const EventsPage = observer(() => {
   const location = useLocation();
   const navigate = useNavigate();
-  const userStore = useUserStore();
   const eventStore = useEventStore();
 
   const toScannerPage = (eventId: string) => {
