@@ -9,23 +9,23 @@ export const QrScannerPage = observer(() => {
   const userStore = useUserStore();
   const [iframeHtml, setIframeHtml] = useState<any>();
 
-  useEffect(() => {
-    console.log('lastEvent', userStore.lastEvent);
-    // if (userStore.lastEvent) {
-    // const parseHtml = new DOMParser().parseFromString(userStore.lastEvent, 'text/html').body.innerHTML;
-    // console.log('parseHtml', parseHtml);
-    // setIframeHtml(parseHtml);
-    // }
+  // useEffect(() => {
+  // console.log('lastEvent', userStore.lastEvent);
+  // if (userStore.lastEvent) {
+  // const parseHtml = new DOMParser().parseFromString(userStore.lastEvent, 'text/html').body.innerHTML;
+  // console.log('parseHtml', parseHtml);
+  // setIframeHtml(parseHtml);
+  // }
 
-    // @ts-ignore
-    // const doc = frameId?.current?.contentWindow?.document;
-    // doc.open();
-    // doc.write(userStore.lastEvent);
+  // @ts-ignore
+  // const doc = frameId?.current?.contentWindow?.document;
+  // doc.open();
+  // doc.write(userStore.lastEvent);
 
-    // let doc = document.getElementById('contentIFrame').contentWindow.document;
-    // doc.open();
-    // doc.write(template);
-  }, [userStore.lastEvent]);
+  // let doc = document.getElementById('contentIFrame').contentWindow.document;
+  // doc.open();
+  // doc.write(template);
+  // }, [userStore.lastEvent]);
   const onQRCodeScan = (result: Record<string, any>) => {
     console.log('About to send event DAVINCI_QR_CODE_VALIDATOR_ET', result);
 
@@ -40,7 +40,7 @@ export const QrScannerPage = observer(() => {
     };
 
     // @ts-ignore
-    const trigger = SdkTriggerEnum.DAVINCI_QR_CODE_VALIDATOR;
+    const trigger = SdkTriggerEnum.CHECK;
     userStore.sdkInstance.sendEvent(trigger, {...data, trigger});
   };
 

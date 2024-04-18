@@ -13,7 +13,9 @@ export const LoginPage = () => {
       />
       <div className="flex flex-col justify-center items-center">
         <Typography variant="h5">Welcome, Gatekeeper!</Typography>
-        <Typography variant="body2">Sign up with your email to get started</Typography>
+        <Typography variant="body1" color="gray">
+          Sign up with your email to get started
+        </Typography>
       </div>
       <div className="flex flex-col gap-4">
         <LoginComponent />

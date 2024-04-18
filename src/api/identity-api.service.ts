@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: API_IDENTITY_URL,
 });
 
-export class AuthApiService {
+export class IdentityApiService {
   public async sendOtp(email: string): Promise<boolean> {
     let result = null;
     try {

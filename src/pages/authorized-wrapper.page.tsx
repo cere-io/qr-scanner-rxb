@@ -1,14 +1,16 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, Tooltip, Typography} from '@mui/material';
 import {Outlet, Link as RouterLink, useNavigate} from 'react-router-dom';
 import {useUserStore} from '../hooks/use-user-store';
 import {observer} from 'mobx-react-lite';
 import {ReactComponent as LogoSvg} from './../assets/logo.svg';
-import {ReactComponent as ExitSvg} from './../assets/exit.svg';
+import {ConfirmLogoutDialog} from '../components/dialogs/confirm-logout.dialog';
+import {ExitIcon} from '../components/icon/exit-icon';
 
 export const AuthorizedWrapperPage = observer(() => {
   const userStore = useUserStore();
   const navigate = useNavigate();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const logout = () => {
     userStore.logout();
     navigate('/login');
@@ -25,7 +27,7 @@ export const AuthorizedWrapperPage = observer(() => {
       auth(); // FIXME only for fast debuggin
       // logout();
     }
-  }, [userStore.isAuth, logout]);
+  }, [userStore.isAuth, logout, auth]);
 
   return (
     <div className="flex flex-col divide-y max-w-[500px] m-auto">
@@ -41,14 +43,14 @@ export const AuthorizedWrapperPage = observer(() => {
             </Link>
           </li>
           <li>
-            <Link component={RouterLink} to="/scanner">
+            <Link component={RouterLink} to="/event-scanner/30">
               Scanner
             </Link>
           </li>
           <li>
             <Tooltip title="Sign out">
-              <div className="cursor-pointer" onClick={() => logout()}>
-                <ExitSvg />
+              <div className="cursor-pointer" onClick={() => setShowLogoutDialog(true)}>
+                <ExitIcon />
               </div>
             </Tooltip>
           </li>
@@ -57,6 +59,7 @@ export const AuthorizedWrapperPage = observer(() => {
       <main className="flex flex-col">
         <Outlet />
       </main>
+      <ConfirmLogoutDialog open={showLogoutDialog} onClose={() => setShowLogoutDialog(false)} onLogout={logout} />
     </div>
   );
 });

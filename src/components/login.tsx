@@ -41,12 +41,12 @@ export const LoginComponent = observer(() => {
     navigate({...location, pathname: '/login/verify'});
   };
 
-  useEffect(() => {
-    setFocus('email');
-  }, [setFocus]);
+  // useEffect(() => {
+  //   setFocus('email');
+  // }, [setFocus]);
 
   return (
-    <form className="flex flex-col gap-3" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <TextField
         {...register('email')}
         error={!!errors?.['email']?.message}

@@ -3,10 +3,10 @@ import {RouterProvider, createBrowserRouter} from 'react-router-dom';
 import {LoginPage} from './pages/login.page';
 import {QrScannerPage} from './pages/qr-scanner.page';
 import {AuthorizedWrapperPage} from './pages/authorized-wrapper.page';
-import {EventIframePage} from './pages/event-iframe.page';
 import {UnauthorizedWrapperPage} from './pages/unauthorized-wrapper.page';
 import {VerifyPage} from './pages/verify.page';
 import {EventsPage} from './pages/events.page';
+import {EventScannerPage} from './pages/event-scanner.page';
 
 const router = createBrowserRouter([
   {
@@ -24,10 +24,6 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/event-iframe',
-    Component: EventIframePage,
-  },
-  {
     path: '/',
     Component: AuthorizedWrapperPage,
     children: [
@@ -38,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: 'events',
         Component: EventsPage,
+      },
+      {
+        path: 'event-scanner/:eventId',
+        Component: EventScannerPage,
       },
     ],
   },
