@@ -11,6 +11,7 @@ export class EventStore {
   private _events: ExhibitCardInterface[] = [];
   private _eventSubscription: UnsubscribeEngagementHandler | undefined;
   private _allowedEvents: {[key: string]: string[]} = {};
+
   constructor(private userStore: UserStore) {
     makeAutoObservable(this);
     when(
@@ -55,7 +56,7 @@ export class EventStore {
     );
   }
 
-  get allowedEvents() {
+  get allowedEvents(): string[] {
     if (!this.userStore.email) {
       return [];
     }

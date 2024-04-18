@@ -1,52 +1,31 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {QrScannerComponent} from '../components/qr-scanner';
 import {observer} from 'mobx-react-lite';
 import {Button, CircularProgress, Tooltip, Typography} from '@mui/material';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {ReactComponent as ArrowLeft} from './../assets/arrow-left.svg';
 import {ReactComponent as CheckIcon} from './../assets/check.svg';
 import {ReactComponent as QrIcon} from './../assets/qr-code.svg';
 import {ReactComponent as CloseIcon} from './../assets/close.svg';
 import {useScannerStore} from '../hooks/use-scanner-store';
 import {ScannerStatusEnum} from '../enums/scanner-status.enum';
+import {useEventStore} from '../hooks/use-event-store';
 
 export const EventScannerPage = observer(() => {
   const scannerStore = useScannerStore();
+  const eventStore = useEventStore();
   const location = useLocation();
   const navigate = useNavigate();
+  const {eventId} = useParams();
+
+  useEffect(() => {
+    if (!eventId || !eventStore.allowedEvents.includes(eventId)) {
+      navigate({...location, pathname: '/events'});
+    }
+  }, [eventId, navigate, eventStore.allowedEvents, location]);
 
   const onQRCodeScan = async (result: Record<string, any>) => {
-    console.log('onQRCodeScan result', result);
-    // const collectionId = result?.collectionId;
-    // const nftId = result?.nftId;
-    // const wallet = result?.wallet;
-    // // userWallet = result?.
-    // const userNfts = await new FreeportApiService().getOwnerNfts(wallet);
-    // const balance = userNfts.find((nft) => nft.collection.address === collectionId && nft.nftId === nftId)?.balance || '0'
-    // console.log('balance', balance);
-    scannerStore.scan(result);
-  };
-
-  const emulateScan = () => {
-    // FIXME remove this code
-    onQRCodeScan({
-      nftId: '4',
-      collectionId: '0x580711df26c49c4718e8bbef73c4306cadfef6ae',
-      wallet: '0x61af9b220e67d9f8c69fca4adf93e2aaddc7fa70',
-      timestamp: 1713404107964,
-      eventId: '31',
-      signature:
-        '0x81204556dec77a76a4ebde4cf5c636957c611952f7f3bf418f64f7c1acbdda3a61416d4356566489791fcd5e38b8d06e1aa7cf8e65c1d865ebf6e9b40cf6280a1c',
-    });
-    // onQRCodeScan({
-    //   nftId: '4',
-    //   collectionId: '0xd1A5b1a915875d46b2dC02994B7CC0ffD1d24882',
-    //   wallet: '0x61af9b220e67d9f8c69fca4adf93e2aaddc7fa70',
-    //   timestamp: 1712925658605,
-    //   eventId: '29',
-    //   signature:
-    //     '0x764840c88258b90196317c5cd8ff6c49e64ad20e36345b11897f5f8b6b2ec84e7ff3ecbc04ec80ef219c005aed58b54d8eb7c145c7dcbbff770ec922559e84191b',
-    // })
+    scannerStore.scan({...result, eventId: result?.eventId !== eventId ? eventId : undefined});
   };
 
   const backHandler = () => {
@@ -154,8 +133,6 @@ export const EventScannerPage = observer(() => {
           </>
         )}
       </div>
-
-      <Button onClick={emulateScan}>Emulate scan</Button>
     </div>
   );
 });

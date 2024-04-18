@@ -42,7 +42,16 @@ export class ScannerStore {
               }
             }
             if (response.trigger === SdkTriggerEnum.TICKET_USE) {
-              this.ready();
+              if (response?.data?.result === true) {
+                this.ready();
+              } else if (response?.data?.result === false) {
+                this._status = ScannerStatusEnum.ERROR;
+                this._errorMessage = response?.data?.errorMessage;
+              } else {
+                this._status = ScannerStatusEnum.ERROR;
+                this._errorMessage = 'Wrong response structure in RXB response';
+                console.error(response);
+              }
             }
           } catch (e) {
             console.error("Cannot parse response from sdk, it's not a JSON format");
