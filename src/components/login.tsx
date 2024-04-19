@@ -1,5 +1,5 @@
 import {Button, TextField} from '@mui/material';
-import React, {useEffect} from 'react';
+import React from 'react';
 import * as yup from 'yup';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -24,7 +24,6 @@ export const LoginComponent = observer(() => {
     handleSubmit,
     // setError,
     formState: {errors},
-    getFieldState,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: 'onSubmit',
@@ -38,10 +37,10 @@ export const LoginComponent = observer(() => {
     navigate({...location, pathname: '/login/verify'});
   };
 
-  useEffect(() => {
-    setFocus('email');
-    window.scrollTo(0, 0);
-  }, [setFocus]);
+  // useEffect(() => {
+  //   setFocus('email');
+  //   window.scrollTo(0, 0);
+  // }, [setFocus]);
 
   return (
     <form className="flex flex-col gap-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
