@@ -40,6 +40,7 @@ export const LoginComponent = observer(() => {
 
   useEffect(() => {
     setFocus('email');
+    window.scrollTo(0, 0);
   }, [setFocus]);
 
   return (

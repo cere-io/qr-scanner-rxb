@@ -41,6 +41,7 @@ export const VerifyComponent = observer(() => {
 
   useEffect(() => {
     setFocus('code');
+    window.scrollTo(0, 0);
   }, [setFocus]);
 
   const onSubmit: SubmitHandler<Record<string, any>> = async ({code}) => {
