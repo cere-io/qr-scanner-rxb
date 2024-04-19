@@ -25,6 +25,7 @@ export const EventScannerPage = observer(() => {
   }, [eventId, navigate, eventStore.allowedEvents, location]);
 
   const onQRCodeScan = async (result: Record<string, any>) => {
+    console.log('onQRCodeScan', result);
     scannerStore.scan({...result, eventId: result?.eventId !== eventId ? eventId : undefined});
   };
 
@@ -122,10 +123,9 @@ export const EventScannerPage = observer(() => {
             <div className="flex flex-col aspect-square justify-center bg-red-100 items-center rounded-2xl border-[3px] border-red-500 corner-only-border">
               <img className="w-[150px] h-[150px]" src="/images/scan-error.png" alt="" />
             </div>
-            <div className="flex flex-row justify-between bg-red-100 rounded-xl p-3 items-center">
+            <div className="flex flex-row justify-between bg-red-100 rounded-xl p-3 items-center gap-2">
               <CloseIcon className="w-6" />
               <Typography variant="body1">{scannerStore.errorMessage}</Typography>
-              <div className="w-6">&nbsp;</div>
             </div>
             <Button variant="contained" color="primary" size="large" onClick={() => scannerStore.ready()}>
               Try Again

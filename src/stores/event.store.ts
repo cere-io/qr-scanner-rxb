@@ -6,20 +6,24 @@ import {UserStore} from './user.store';
 import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
 import {BffApiService} from '../api/bff-api.service';
 import {ExhibitCardInterface} from '@cere/services-types/dist/types';
+import {NotificationStore} from './notification.store';
 
 export class EventStore {
-  private _events: ExhibitCardInterface[] = [];
+  private _events: ExhibitCardInterface[] | null = null;
   private _eventSubscription: UnsubscribeEngagementHandler | undefined;
   private _allowedEvents: {[key: string]: string[]} = {};
 
-  constructor(private userStore: UserStore) {
+  constructor(
+    private notificationStore: NotificationStore,
+    private userStore: UserStore,
+  ) {
     makeAutoObservable(this);
     when(
       () => !this.userStore.sdkInstance,
       () => {
         this._eventSubscription?.(); // unsubscribe
         this._allowedEvents = {};
-        this._events = [];
+        this._events = null;
       },
     );
     when(
@@ -46,12 +50,8 @@ export class EventStore {
     );
     reaction(
       () => this._allowedEvents,
-      async (value, previousValue) => {
-        console.log('EventStore reaction', value, previousValue);
-        const events = await new BffApiService().events();
-        if (Array.isArray(events)) {
-          this._events = events;
-        }
+      async () => {
+        await this.reload();
       },
     );
   }
@@ -66,7 +66,23 @@ export class EventStore {
     );
   }
 
-  get events() {
+  get events(): ExhibitCardInterface[] | null {
+    if (!this._events) {
+      return null;
+    }
     return this._events.filter((event) => this.allowedEvents.includes(String(event.id)));
+  }
+
+  public async reload(): Promise<void> {
+    this._events = null;
+    try {
+      const events = await new BffApiService().events();
+      if (Array.isArray(events)) {
+        this._events = events;
+      }
+    } catch (e: any) {
+      this._events = [];
+      this.notificationStore.send({message: e.message || JSON.stringify(e), type: 'error'});
+    }
   }
 }

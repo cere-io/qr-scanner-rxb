@@ -27,23 +27,20 @@ export const LoginComponent = observer(() => {
     getFieldState,
   } = useForm({
     resolver: yupResolver(validationSchema),
-    mode: 'all',
+    mode: 'onSubmit',
     defaultValues: {
       email: userStore.email || '',
     },
   });
 
   const onSubmit: SubmitHandler<Record<string, any>> = async ({email}) => {
-    if (getFieldState('email').invalid) {
-      return;
-    }
     await userStore.sendOtpCode({email});
     navigate({...location, pathname: '/login/verify'});
   };
 
-  // useEffect(() => {
-  //   setFocus('email');
-  // }, [setFocus]);
+  useEffect(() => {
+    setFocus('email');
+  }, [setFocus]);
 
   return (
     <form className="flex flex-col gap-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>

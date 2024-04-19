@@ -8,6 +8,11 @@ if (!process.env.REACT_APP_APP_TENANT_ID) {
 }
 const APP_TENANT_ID = process.env.REACT_APP_APP_TENANT_ID;
 
+if (!process.env.REACT_APP_RXB_SDK_ENV) {
+  throw new Error('please set REACT_APP_RXB_SDK_ENV env parameter');
+}
+const RXB_SDK_ENV = process.env.REACT_APP_RXB_SDK_ENV;
+
 if (!process.env.REACT_APP_API_IDENTITY_URL) {
   throw new Error('please set REACT_APP_API_IDENTITY_URL env parameter');
 }
@@ -23,4 +28,4 @@ if (!process.env.REACT_APP_API_FREEPORT_URL) {
 }
 const API_FREEPORT_URL = process.env.REACT_APP_API_FREEPORT_URL;
 
-export {APP_ID, APP_TENANT_ID, API_IDENTITY_URL, API_BFF_URL, API_FREEPORT_URL};
+export {APP_ID, APP_TENANT_ID, API_IDENTITY_URL, API_BFF_URL, API_FREEPORT_URL, RXB_SDK_ENV};

@@ -13,6 +13,7 @@ export class IdentityApiService {
       result = await api.post('/identity/auth', {appId: APP_ID, email});
     } catch (err: any) {
       console.error(err);
+      throw new Error(err);
     }
 
     return result?.status === 200;

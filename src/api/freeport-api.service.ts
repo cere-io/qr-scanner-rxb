@@ -34,6 +34,7 @@ export class FreeportApiService {
       result = await api.get<IFreeportOwnedNft[]>(`/api/wallet/${userWallet}/owned`);
     } catch (err: any) {
       console.error(err);
+      throw new Error(err);
     }
 
     if (result?.status !== 200 && Array.isArray(result?.data)) {

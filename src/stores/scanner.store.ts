@@ -5,13 +5,17 @@ import {makeAutoObservable, when} from 'mobx';
 import {UserStore} from './user.store';
 import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
 import {ScannerStatusEnum} from '../enums/scanner-status.enum';
+import {NotificationStore} from './notification.store';
 
 export class ScannerStore {
   private _eventSubscription: UnsubscribeEngagementHandler | undefined;
   private _scanResult: Record<string, any> | undefined;
   private _status: ScannerStatusEnum = ScannerStatusEnum.INIT;
   private _errorMessage: string | undefined = undefined;
-  constructor(private userStore: UserStore) {
+  constructor(
+    private notificationStore: NotificationStore,
+    private userStore: UserStore,
+  ) {
     makeAutoObservable(this);
     when(
       () => !this.userStore.sdkInstance,

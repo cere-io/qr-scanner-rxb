@@ -17,9 +17,10 @@ export class BffApiService {
       result = await api.get('/exhibits/?locale=en');
     } catch (err: any) {
       console.error(err);
+      throw new Error(err);
     }
     if (result?.status !== 200 && Array.isArray(result?.data?.data)) {
-      throw new Error('Get events error');
+      throw new Error('Wrong data structure in events response');
     }
     return result?.data?.data as ExhibitCardInterface[];
   }

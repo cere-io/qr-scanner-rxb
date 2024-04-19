@@ -1,4 +1,4 @@
-import {Button, Typography} from '@mui/material';
+import {Alert, Button, Typography} from '@mui/material';
 import React, {useEffect} from 'react';
 import * as yup from 'yup';
 import OtpInput from 'react-otp-input';
@@ -7,6 +7,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {observer} from 'mobx-react-lite';
 import {useUserStore} from '../hooks/use-user-store';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 
 const validationSchema = yup
   .object({
@@ -18,6 +19,7 @@ export const VerifyComponent = observer(() => {
   const userStore = useUserStore();
   const location = useLocation();
   const navigate = useNavigate();
+  const {enqueueSnackbar} = useSnackbar();
 
   const {
     control,
@@ -46,8 +48,7 @@ export const VerifyComponent = observer(() => {
       await userStore.login({email: userStore.email!, code});
       navigate({...location, pathname: '/events'});
     } catch (e) {
-      // TODO some notification here
-      console.log('Cannot authorize');
+      enqueueSnackbar('Wrong Otp code', {variant: 'error'});
     }
   };
 

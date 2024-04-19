@@ -5,14 +5,15 @@ import * as web from '@cere/sdk-js/dist/web';
 import {makeAutoObservable} from 'mobx';
 
 import {IdentityApiService} from '../api/identity-api.service';
-import {APP_ID} from '../environment';
+import {APP_ID, RXB_SDK_ENV} from '../environment';
+import {NotificationStore} from './notification.store';
 
 export class UserStore {
   private _sdkInstance: CereSDK | null = null;
   private _userEmail: string | null = null;
   private _userSdkSubscription: UnsubscribeEngagementHandler | undefined = undefined;
 
-  constructor() {
+  constructor(private notificationStore: NotificationStore) {
     makeAutoObservable(this);
   }
 
@@ -29,8 +30,9 @@ export class UserStore {
           email: email,
           password: code,
         },
-        deployment: 'dev',
+        deployment: RXB_SDK_ENV,
       });
+      await this._sdkInstance?.signMessage('');
       this._userEmail = email;
     } catch (e: any) {
       console.error(e);

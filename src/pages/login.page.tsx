@@ -6,10 +6,10 @@ export const LoginPage = () => {
   return (
     <div className="flex flex-col p-5 gap-4">
       <img
-        srcSet="/images/size/qr-scanner-320x320.png 320w"
+        srcSet="/images/size/qr-scanner-320x320.jpeg 320w"
         sizes="(max-width: 320px) 280px"
         src="/images/original/qr-scanner.jpeg"
-        alt="QR Scanner"
+        alt=""
       />
       <div className="flex flex-col justify-center items-center">
         <Typography variant="h5">Welcome, Gatekeeper!</Typography>

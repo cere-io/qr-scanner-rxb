@@ -2,6 +2,8 @@ import packageJson from '../package.json';
 import {AppRouter} from './router';
 import {theme} from './theme';
 import {ThemeProvider} from '@mui/material';
+import {SnackbarProvider} from 'notistack';
+import {NotificationWrapper} from './components/notification-wrapper';
 
 export function App() {
   console.log(
@@ -12,7 +14,10 @@ export function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <AppRouter />
+        <SnackbarProvider>
+          <AppRouter />
+          <NotificationWrapper />
+        </SnackbarProvider>
       </ThemeProvider>
     </>
   );
