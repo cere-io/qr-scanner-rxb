@@ -14,7 +14,7 @@ export const NotificationWrapper = observer(() => {
         enqueueSnackbar(message?.message, {variant: message.type});
       }
     }
-  }, [notificationStore.length]);
+  }, [notificationStore, enqueueSnackbar]);
 
   return <></>;
 });

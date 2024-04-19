@@ -1,4 +1,4 @@
-import {Alert, Button, Typography} from '@mui/material';
+import {Button, Typography} from '@mui/material';
 import React, {useEffect} from 'react';
 import * as yup from 'yup';
 import OtpInput from 'react-otp-input';

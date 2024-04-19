@@ -70,7 +70,9 @@ export class EventStore {
     if (!this._events) {
       return null;
     }
-    return this._events.filter((event) => this.allowedEvents.includes(String(event.id)));
+    return this._events.filter((event) => {
+      return this.allowedEvents.includes(String(event.id)) && event.eventType === 'in_person';
+    });
   }
 
   public async reload(): Promise<void> {

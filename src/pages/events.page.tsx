@@ -71,7 +71,16 @@ export const EventsPage = observer(() => {
                     <Typography variant="body1">
                       {eventData.creator.name} {eventData.title}
                     </Typography>
-                    <Typography variant="body2">{new Date().toISOString()}</Typography>
+                    {eventData?.startsAt && (
+                      <Typography variant="body2" color="gray">
+                        {new Date(eventData.startsAt).toLocaleString()}
+                      </Typography>
+                    )}
+                    {(eventData?.eventHiddenLocation || eventData.eventPublicLocation) && (
+                      <Typography variant="body2" color="gray">
+                        {eventData?.eventHiddenLocation || eventData.eventPublicLocation}
+                      </Typography>
+                    )}
                   </div>
                 </div>
                 <div className="cursor-pointer" onClick={() => toScannerPage(String(eventData.id))}>

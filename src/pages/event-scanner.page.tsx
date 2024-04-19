@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {QrScannerComponent} from '../components/qr-scanner';
 import {observer} from 'mobx-react-lite';
 import {Button, CircularProgress, Tooltip, Typography} from '@mui/material';
@@ -10,6 +10,7 @@ import {ReactComponent as CloseIcon} from './../assets/close.svg';
 import {useScannerStore} from '../hooks/use-scanner-store';
 import {ScannerStatusEnum} from '../enums/scanner-status.enum';
 import {useEventStore} from '../hooks/use-event-store';
+import {ExhibitCardInterface} from '@cere/services-types/dist/types';
 
 export const EventScannerPage = observer(() => {
   const scannerStore = useScannerStore();
@@ -17,12 +18,15 @@ export const EventScannerPage = observer(() => {
   const location = useLocation();
   const navigate = useNavigate();
   const {eventId} = useParams();
+  const [event, setEvent] = useState<ExhibitCardInterface | null>(null);
 
   useEffect(() => {
     if (!eventId || !eventStore.allowedEvents.includes(eventId)) {
       navigate({...location, pathname: '/events'});
+    } else {
+      setEvent(eventStore.events?.find((item: ExhibitCardInterface) => item.id === eventId) || null);
     }
-  }, [eventId, navigate, eventStore.allowedEvents, location]);
+  }, [eventId, navigate, eventStore.allowedEvents, eventStore.events, location]);
 
   const onQRCodeScan = async (result: Record<string, any>) => {
     console.log('onQRCodeScan', result);
@@ -49,10 +53,12 @@ export const EventScannerPage = observer(() => {
         <span className="w-6">&nbsp;</span>
       </div>
       <div className="text-center">
-        <Typography variant="body1">"In-person event with Joey - Requiem Unlocked"</Typography>
-        <Typography variant="body1" color="gray">
-          starts on 23 June 2024 at 19:00
-        </Typography>
+        <Typography variant="body1">{event?.title}</Typography>
+        {event?.startsAt && (
+          <Typography variant="body1" color="gray">
+            {new Date(event.startsAt).toLocaleString()}
+          </Typography>
+        )}
       </div>
       <div className="flex flex-col gap-5">
         {scannerStore.status === ScannerStatusEnum.INIT && (
@@ -110,7 +116,7 @@ export const EventScannerPage = observer(() => {
               {scannerStore.status === ScannerStatusEnum.USE_TICKET_PROCESSING ? (
                 <CircularProgress color="primary" />
               ) : (
-                'Complete Scan'
+                'Use Ticket'
               )}
             </Button>
             <Button variant="outlined" color="primary" size="large" onClick={() => scannerStore.ready()}>

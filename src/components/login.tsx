@@ -19,10 +19,8 @@ export const LoginComponent = observer(() => {
   const navigate = useNavigate();
 
   const {
-    setFocus,
     register,
     handleSubmit,
-    // setError,
     formState: {errors},
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -36,11 +34,6 @@ export const LoginComponent = observer(() => {
     await userStore.sendOtpCode({email});
     navigate({...location, pathname: '/login/verify'});
   };
-
-  // useEffect(() => {
-  //   setFocus('email');
-  //   window.scrollTo(0, 0);
-  // }, [setFocus]);
 
   return (
     <form className="flex flex-col gap-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>

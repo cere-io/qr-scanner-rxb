@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Tooltip, Typography} from '@mui/material';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {useUserStore} from '../hooks/use-user-store';
@@ -11,10 +11,10 @@ export const AuthorizedWrapperPage = observer(() => {
   const userStore = useUserStore();
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const logout = () => {
+  const logout = useCallback(() => {
     userStore.logout();
     navigate('/login');
-  };
+  }, [navigate, userStore]);
 
   useEffect(() => {
     if (!userStore.isAuth) {
