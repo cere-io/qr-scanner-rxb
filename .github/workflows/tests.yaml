@@ -1,28 +1,27 @@
-name: "Run tests"
+name: 'Run tests'
 on: [pull_request]
 jobs:
   test:
     runs-on: [self-hosted, cere-io-large]
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v1"
+      - name: 'Checkout'
+        uses: 'actions/checkout@v1'
       - name: Read .nvmrc
         id: nvmrc
         run: echo "##[set-output name=NODE_VERSION;]$(cat .nvmrc)"
-      - name: "Set up NodeJSs"
-        uses: "actions/setup-node@v1"
+      - name: 'Set up NodeJSs'
+        uses: 'actions/setup-node@v1'
         with:
-          node-version: "${{ steps.nvmrc.outputs.NODE_VERSION }}"
-      - name: "Install node modules"
+          node-version: '${{ steps.nvmrc.outputs.NODE_VERSION }}'
+      - name: 'Install node modules'
         run: npm ci
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN_READ}}
-      - name: "Check ts build"
+      - name: 'Check ts build'
         run: npm run build
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN_READ}}
-      - name: "Check lint"
+      - name: 'Check lint'
         run: npm run lint
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-
