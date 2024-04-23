@@ -37,11 +37,9 @@ export class ScannerStore {
               if (response?.data?.result === true) {
                 this._status = ScannerStatusEnum.SUCCESS;
               } else if (response?.data?.result === false) {
-                this._status = ScannerStatusEnum.ERROR;
-                this._errorMessage = response?.data?.errorMessage;
+                this._throwError(response?.data?.errorMessage);
               } else {
-                this._status = ScannerStatusEnum.ERROR;
-                this._errorMessage = 'Wrong response structure in RXB response';
+                this._throwError('Wrong response structure in RXB response');
                 console.error(response);
               }
             }
@@ -49,11 +47,9 @@ export class ScannerStore {
               if (response?.data?.result === true) {
                 this.ready();
               } else if (response?.data?.result === false) {
-                this._status = ScannerStatusEnum.ERROR;
-                this._errorMessage = response?.data?.errorMessage;
+                this._throwError(response?.data?.errorMessage);
               } else {
-                this._status = ScannerStatusEnum.ERROR;
-                this._errorMessage = 'Wrong response structure in RXB response';
+                this._throwError('Wrong response structure in RXB response');
                 console.error(response);
               }
             }
@@ -65,7 +61,13 @@ export class ScannerStore {
     );
   }
 
-  public scan(data: Record<string, any>): void {
+  public scan(eventId: string | undefined, data: Record<string, any>): void {
+    debugger;
+    if (!eventId || data?.eventId !== eventId) {
+      this._throwError('Different event');
+      return;
+    }
+
     const trigger = SdkTriggerEnum.TICKET_CHECK;
     this.userStore.sdkInstance.sendEvent(trigger, {...data, trigger});
     this._status = ScannerStatusEnum.PROCESSING;
@@ -91,5 +93,10 @@ export class ScannerStore {
 
   public get errorMessage(): string | undefined {
     return this._errorMessage;
+  }
+
+  private _throwError(errorMessage: string) {
+    this._status = ScannerStatusEnum.ERROR;
+    this._errorMessage = errorMessage;
   }
 }
