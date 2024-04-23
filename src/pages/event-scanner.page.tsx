@@ -29,8 +29,8 @@ export const EventScannerPage = observer(() => {
   }, [eventId, navigate, eventStore.allowedEvents, eventStore.events, location]);
 
   const onQRCodeScan = async (result: Record<string, any>) => {
-    console.log('onQRCodeScan', result);
-    scannerStore.scan({...result, eventId: result?.eventId !== eventId ? eventId : undefined});
+    console.log('onQRCodeScan', eventId, result);
+    scannerStore.scan(eventId, result);
   };
 
   const backHandler = () => {
@@ -129,7 +129,7 @@ export const EventScannerPage = observer(() => {
             <div className="flex flex-col aspect-square justify-center bg-red-100 items-center rounded-2xl border-[3px] border-red-500 corner-only-border">
               <img className="w-[150px] h-[150px]" src="/images/scan-error.png" alt="" />
             </div>
-            <div className="flex flex-row justify-between bg-red-100 rounded-xl p-3 items-center gap-2">
+            <div className="flex flex-row bg-red-100 rounded-xl p-3 items-center gap-2">
               <CloseIcon className="w-6" />
               <Typography variant="body1">{scannerStore.errorMessage}</Typography>
             </div>
