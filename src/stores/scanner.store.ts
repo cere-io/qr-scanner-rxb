@@ -62,7 +62,6 @@ export class ScannerStore {
   }
 
   public scan(eventId: string | undefined, data: Record<string, any>): void {
-    debugger;
     if (!eventId || data?.eventId !== eventId) {
       this._throwError('Different event');
       return;
