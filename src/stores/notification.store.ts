@@ -8,13 +8,15 @@ interface NotificationItem {
 
 export class NotificationStore {
   private _queue: NotificationItem[] = [];
+  private _count: number = 0;
 
   constructor() {
     makeAutoObservable(this);
     reaction(
-      () => this._queue.length,
+      () => this._count,
       async () => {
-        console.log(this._queue);
+        console.log('NotificationStore _queue>>>>', this._queue);
+        console.log('NotificationStore length>>>>', this._count);
       },
     );
   }
@@ -32,10 +34,11 @@ export class NotificationStore {
       type: type,
       id,
     });
+    this._count++;
   }
 
   public get length() {
-    return this._queue.length;
+    return this._count;
   }
 
   public next(): NotificationItem | undefined {

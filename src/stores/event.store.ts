@@ -1,5 +1,5 @@
 import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
-import {makeAutoObservable, reaction, when} from 'mobx';
+import {makeAutoObservable, reaction} from 'mobx';
 
 // @ts-ignore
 import {UserStore} from './user.store';
@@ -18,7 +18,7 @@ export class EventStore {
     private userStore: UserStore,
   ) {
     makeAutoObservable(this);
-    when(
+    reaction(
       () => !this.userStore.sdkInstance,
       () => {
         this._eventSubscription?.(); // unsubscribe
@@ -26,13 +26,13 @@ export class EventStore {
         this._events = null;
       },
     );
-    when(
+    reaction(
       () => !!this.userStore.sdkInstance,
       () => {
         const trigger = SdkTriggerEnum.PERMISSIONS;
         this._eventSubscription?.(); // unsubscribe
 
-        this._eventSubscription = this.userStore.sdkInstance.onEngagement((htmlTemplate) => {
+        this._eventSubscription = this.userStore.sdkInstance?.onEngagement((htmlTemplate) => {
           try {
             const jsonData = htmlTemplate.replace(/(<([^>]+)>)/gi, '');
             const data: {trigger: string; data: {permissions: {[key: string]: string[]}}} = JSON.parse(jsonData);
@@ -45,7 +45,7 @@ export class EventStore {
           }
         }, {});
 
-        this.userStore.sdkInstance.sendEvent(trigger, {trigger});
+        this.userStore.sdkInstance?.sendEvent(trigger, {trigger});
       },
     );
     reaction(

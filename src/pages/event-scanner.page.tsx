@@ -11,6 +11,9 @@ import {useScannerStore} from '../hooks/use-scanner-store';
 import {ScannerStatusEnum} from '../enums/scanner-status.enum';
 import {useEventStore} from '../hooks/use-event-store';
 import {ExhibitCardInterface} from '@cere/services-types/dist/types';
+import {capitalizeFirstLetterHelper} from '../helpers/capitalize-first-letter.helper';
+import {enumToTextHelper} from '../helpers/enum-to-text.helper';
+import dayjs from 'dayjs';
 
 export const EventScannerPage = observer(() => {
   const scannerStore = useScannerStore();
@@ -25,8 +28,11 @@ export const EventScannerPage = observer(() => {
       navigate({...location, pathname: '/events'});
     } else {
       setEvent(eventStore.events?.find((item: ExhibitCardInterface) => item.id === eventId) || null);
+      if (scannerStore.status !== ScannerStatusEnum.INIT) {
+        scannerStore.ready();
+      }
     }
-  }, [eventId, navigate, eventStore.allowedEvents, eventStore.events, location]);
+  }, [eventId, navigate, eventStore, location, scannerStore]);
 
   const onQRCodeScan = async (result: Record<string, any>) => {
     console.log('onQRCodeScan', eventId, result);
@@ -53,10 +59,13 @@ export const EventScannerPage = observer(() => {
         <span className="w-6">&nbsp;</span>
       </div>
       <div className="text-center">
-        <Typography variant="body1">{event?.title}</Typography>
+        <Typography variant="body1">
+          “{capitalizeFirstLetterHelper(enumToTextHelper(event?.eventType))} event with {event?.creator.name} -{' '}
+          {event?.title}”
+        </Typography>
         {event?.startsAt && (
           <Typography variant="body1" color="gray">
-            {new Date(event.startsAt).toLocaleString()}
+            starts on {dayjs(event?.startsAt).format('DD MMMM YYYY [at] HH:mm')}
           </Typography>
         )}
       </div>
@@ -130,7 +139,7 @@ export const EventScannerPage = observer(() => {
               <img className="w-[150px] h-[150px]" src="/images/scan-error.png" alt="" />
             </div>
             <div className="flex flex-row bg-red-100 rounded-xl p-3 items-center gap-2">
-              <CloseIcon className="w-6" />
+              <CloseIcon className="w-6 fill-red-500" />
               <Typography variant="body1">{scannerStore.errorMessage}</Typography>
             </div>
             <Button variant="contained" color="primary" size="large" onClick={() => scannerStore.ready()}>

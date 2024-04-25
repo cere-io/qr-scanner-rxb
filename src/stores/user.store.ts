@@ -18,8 +18,17 @@ export class UserStore {
   }
 
   public async sendOtpCode({email}: {email: string}) {
-    this._userEmail = email;
-    await new IdentityApiService().sendOtp(email);
+    if (email) {
+      this._userEmail = email;
+      try {
+        await new IdentityApiService().sendOtp(email);
+        this.notificationStore.send({message: 'A new email has been sent', type: 'info'});
+      } catch (e) {
+        this.notificationStore.send({message: 'Something was wrong, we cannot send you an email', type: 'error'});
+      }
+      return true;
+    }
+    return false;
   }
 
   public login = async ({email, code}: {email: string; code: string}) => {
@@ -35,7 +44,7 @@ export class UserStore {
       await this._sdkInstance?.signMessage('');
       this._userEmail = email;
     } catch (e: any) {
-      console.error(e);
+      this._sdkInstance = null;
       throw new Error(e);
     }
   };
@@ -54,10 +63,7 @@ export class UserStore {
     return !!this._userEmail && !!this._sdkInstance;
   }
 
-  public get sdkInstance(): CereSDK {
-    if (!this._sdkInstance) {
-      throw new Error('Cannot get instance of cereSDK');
-    }
-    return this._sdkInstance;
+  public get sdkInstance(): CereSDK | null {
+    return this._sdkInstance || null;
   }
 }

@@ -1,5 +1,5 @@
 import {UnsubscribeEngagementHandler} from '@cere/sdk-js/dist/src/clients/engagement';
-import {makeAutoObservable, when} from 'mobx';
+import {makeAutoObservable, reaction} from 'mobx';
 
 // @ts-ignore
 import {UserStore} from './user.store';
@@ -17,18 +17,18 @@ export class ScannerStore {
     private userStore: UserStore,
   ) {
     makeAutoObservable(this);
-    when(
+    reaction(
       () => !this.userStore.sdkInstance,
       () => {
         this._eventSubscription?.(); // unsubscribe
       },
     );
-    when(
+    reaction(
       () => !!this.userStore.sdkInstance,
       () => {
         this._eventSubscription?.(); // unsubscribe
 
-        this._eventSubscription = this.userStore.sdkInstance.onEngagement((htmlTemplate) => {
+        this._eventSubscription = this.userStore.sdkInstance?.onEngagement((htmlTemplate) => {
           try {
             const jsonData = htmlTemplate.replace(/(<([^>]+)>)/gi, '');
             const response: Record<string, any> = JSON.parse(jsonData);
@@ -68,7 +68,7 @@ export class ScannerStore {
     }
 
     const trigger = SdkTriggerEnum.TICKET_CHECK;
-    this.userStore.sdkInstance.sendEvent(trigger, {...data, trigger});
+    this.userStore.sdkInstance?.sendEvent(trigger, {...data, trigger});
     this._status = ScannerStatusEnum.PROCESSING;
     this._scanResult = data;
   }
@@ -85,7 +85,7 @@ export class ScannerStore {
   public useTicket(): void {
     if (this._status === ScannerStatusEnum.SUCCESS) {
       const trigger = SdkTriggerEnum.TICKET_USE;
-      this.userStore.sdkInstance.sendEvent(trigger, {...this._scanResult, trigger});
+      this.userStore.sdkInstance?.sendEvent(trigger, {...this._scanResult, trigger});
       this._status = ScannerStatusEnum.USE_TICKET_PROCESSING;
     }
   }

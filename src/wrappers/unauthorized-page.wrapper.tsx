@@ -4,7 +4,7 @@ import {Outlet} from 'react-router-dom';
 import {observer} from 'mobx-react-lite';
 import {ReactComponent as LogoSvg} from './../assets/logo.svg';
 
-export const UnauthorizedWrapperPage = observer(() => {
+export const UnauthorizedPageWrapper = observer(() => {
   return (
     <div className="flex flex-col divide-y max-w-[500px] m-auto">
       <header className="flex flex-row justify-between p-5">

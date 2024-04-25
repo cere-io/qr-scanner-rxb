@@ -7,7 +7,7 @@ import {ReactComponent as LogoSvg} from './../assets/logo.svg';
 import {ConfirmLogoutDialog} from '../components/dialogs/confirm-logout.dialog';
 import {ExitIcon} from '../components/icon/exit-icon';
 
-export const AuthorizedWrapperPage = observer(() => {
+export const AuthorizedPageWrapper = observer(() => {
   const userStore = useUserStore();
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);

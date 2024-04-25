@@ -1,8 +1,8 @@
 import {RouterProvider, createBrowserRouter} from 'react-router-dom';
 
 import {LoginPage} from './pages/login.page';
-import {AuthorizedWrapperPage} from './pages/authorized-wrapper.page';
-import {UnauthorizedWrapperPage} from './pages/unauthorized-wrapper.page';
+import {AuthorizedPageWrapper} from './wrappers/authorized-page.wrapper';
+import {UnauthorizedPageWrapper} from './wrappers/unauthorized-page.wrapper';
 import {VerifyPage} from './pages/verify.page';
 import {EventsPage} from './pages/events.page';
 import {EventScannerPage} from './pages/event-scanner.page';
@@ -10,7 +10,7 @@ import {EventScannerPage} from './pages/event-scanner.page';
 const router = createBrowserRouter([
   {
     path: '/login',
-    Component: UnauthorizedWrapperPage,
+    Component: UnauthorizedPageWrapper,
     children: [
       {
         path: 'verify',
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    Component: AuthorizedWrapperPage,
+    Component: AuthorizedPageWrapper,
     children: [
       {
         path: 'events',
