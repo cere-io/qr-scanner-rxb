@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@cere/sdk-js": "^5.10.0",
+    "@cere/sdk-js": "^5.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@hookform/resolvers": "^3.3.4",
