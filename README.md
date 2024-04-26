@@ -2,6 +2,10 @@
 
 Application for checking tickets at the entrance. Works as part of the Davinci system and is intended exclusively for event staff. Configuration is carried out in RXB and Davici CRM.
 
+## Changelog
+
+[changelog](./CHANGELOG.md)
+
 ## Architecture
 
 The QR code scanner application is a classic react application using the mobx library as a store. The application only works in conjunction with Davinci (the QR codes themselves are generated in Davinci) and uses RXB as a backend. the scripts that are used in RXB can be found in the [rxb/integration-scripts](/rxb/integration-scripts) folder.
