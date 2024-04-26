@@ -2,9 +2,15 @@
 
 Application for checking tickets at the entrance. Works as part of the Davinci system and is intended exclusively for event staff. Configuration is carried out in RXB and Davici CRM.
 
+### Environments
+
+- dev https://qr-code-scanner-dev.core-dev.aws.cere.io
+- stage https://qr-code-scanner-stg.core-stage.aws.cere.io
+- prod https://qr-code-scanner.core.aws.cere.io/
+
 ## Changelog
 
-[changelog](./CHANGELOG.md)
+[Changelog](./CHANGELOG.md)
 
 ## Architecture
 

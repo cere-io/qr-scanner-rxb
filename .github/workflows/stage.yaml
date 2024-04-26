@@ -2,7 +2,7 @@ name: Release to stage
 on:
   push:
     branches:
-      - 'releases/**'
+      - 'release/**'
       - 'hotfix/**'
   workflow_dispatch:
 
