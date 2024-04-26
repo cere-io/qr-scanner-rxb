@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite';
 import {useSnackbar} from 'notistack';
 import {useNotificationStore} from '../hooks/use-notification-store';
 
-export const NotificationWrapper = observer(() => {
+export const NotificationsWrapper = observer(() => {
   const {enqueueSnackbar} = useSnackbar();
   const notificationStore = useNotificationStore();
 
@@ -14,7 +14,7 @@ export const NotificationWrapper = observer(() => {
         enqueueSnackbar(message?.message, {variant: message.type});
       }
     }
-  }, [notificationStore, enqueueSnackbar]);
+  }, [notificationStore, notificationStore.length, enqueueSnackbar]);
 
   return <></>;
 });

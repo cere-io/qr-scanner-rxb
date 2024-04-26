@@ -17,7 +17,7 @@ export const ConfirmLogoutDialog = ({onClose, onLogout, open}: ConfirmLogoutDial
         <Button fullWidth variant="contained" color="error" size="large" onClick={() => onLogout?.()}>
           Log Out
         </Button>
-        <Button fullWidth variant="text" color="error" size="large" onClick={() => onClose?.()}>
+        <Button fullWidth variant="text" color="secondary" size="large" onClick={() => onClose?.()}>
           Cancel
         </Button>
       </div>

@@ -5,6 +5,9 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {useEventStore} from '../hooks/use-event-store';
 import {observer} from 'mobx-react-lite';
 import {useUserStore} from '../hooks/use-user-store';
+import dayjs from 'dayjs';
+import {enumToTextHelper} from '../helpers/enum-to-text.helper';
+import {capitalizeFirstLetterHelper} from '../helpers/capitalize-first-letter.helper';
 
 export const EventsPage = observer(() => {
   const location = useLocation();
@@ -63,22 +66,18 @@ export const EventsPage = observer(() => {
                   <img
                     srcSet={`${eventData.image.formats?.small?.url} ${eventData.image.formats?.small?.width}w`}
                     sizes={`(max-width: 320px) ${eventData.image.formats?.small?.width}px`}
-                    className="w-8 h-8 min-w-8 object-cover"
+                    className="w-8 h-8 min-w-8 object-cover rounded mt-1"
                     src={eventData.image.url}
                     alt={eventData.image.alternativeText}
                   />
                   <div className="flex flex-col">
                     <Typography variant="body1">
-                      {eventData.creator.name} {eventData.title}
+                      {capitalizeFirstLetterHelper(enumToTextHelper(eventData.eventType))} event with{' '}
+                      {eventData.creator.name} - {eventData.title}
                     </Typography>
                     {eventData?.startsAt && (
                       <Typography variant="body2" color="gray">
-                        {new Date(eventData.startsAt).toLocaleString()}
-                      </Typography>
-                    )}
-                    {(eventData?.eventHiddenLocation || eventData.eventPublicLocation) && (
-                      <Typography variant="body2" color="gray">
-                        {eventData?.eventHiddenLocation || eventData.eventPublicLocation}
+                        {dayjs(eventData.startsAt).format('DD MMMM YYYY, HH:mm')}
                       </Typography>
                     )}
                   </div>

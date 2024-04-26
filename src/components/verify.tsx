@@ -1,5 +1,5 @@
 import {Button, Typography} from '@mui/material';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as yup from 'yup';
 import OtpInput from 'react-otp-input';
 import {SubmitHandler, useForm, useWatch} from 'react-hook-form';
@@ -8,6 +8,8 @@ import {observer} from 'mobx-react-lite';
 import {useUserStore} from '../hooks/use-user-store';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
+
+const RESEND_CODE_TIMEOUT = 60; // seconds
 
 const validationSchema = yup
   .object({
@@ -20,6 +22,7 @@ export const VerifyComponent = observer(() => {
   const location = useLocation();
   const navigate = useNavigate();
   const {enqueueSnackbar} = useSnackbar();
+  const [resendOtpTimer, setResendOtpTimer] = useState<number>(RESEND_CODE_TIMEOUT);
 
   const {
     control,
@@ -44,17 +47,34 @@ export const VerifyComponent = observer(() => {
     window.scrollTo(0, 0);
   }, [setFocus]);
 
+  useEffect(() => {
+    if (resendOtpTimer >= 0) {
+      const timer = setTimeout(() => {
+        setResendOtpTimer(resendOtpTimer - 1);
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [resendOtpTimer]);
+
   const onSubmit: SubmitHandler<Record<string, any>> = async ({code}) => {
     try {
       await userStore.login({email: userStore.email!, code});
       navigate({...location, pathname: '/events'});
     } catch (e) {
-      enqueueSnackbar('Wrong Otp code', {variant: 'error'});
+      enqueueSnackbar('Wrong OTP code', {variant: 'error'});
     }
   };
 
   const onSendOtpCode = async () => {
-    await userStore.sendOtpCode({email: userStore.email!});
+    if (!userStore.email) {
+      navigate({...location, pathname: '/login'});
+    }
+    const result = await userStore.sendOtpCode({email: userStore.email!});
+    if (result) {
+      setResendOtpTimer(RESEND_CODE_TIMEOUT);
+    }
   };
 
   return (
@@ -81,8 +101,8 @@ export const VerifyComponent = observer(() => {
       <Button type="submit" size="large" color="primary" variant="contained">
         Verify
       </Button>
-      <Button size="large" variant="text" onClick={onSendOtpCode}>
-        Resend Code
+      <Button size="large" disabled={resendOtpTimer > 0} variant="text" color="secondary" onClick={onSendOtpCode}>
+        Resend Code {resendOtpTimer > 0 ? `(${resendOtpTimer}s)` : ''}
       </Button>
     </form>
   );

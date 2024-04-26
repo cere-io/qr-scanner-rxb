@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@cere/sdk-js": "^5.11.0",
+    "@cere/sdk-js": "^5.11.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@hookform/resolvers": "^3.3.4",
@@ -12,6 +12,7 @@
     "@mui/material": "^5.15.15",
     "axios": "^1.6.8",
     "axios-retry": "^4.1.0",
+    "dayjs": "^1.11.10",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
     "notistack": "^3.0.1",

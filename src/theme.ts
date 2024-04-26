@@ -6,6 +6,9 @@ export const theme = createTheme({
       main: '#5210E2',
       light: '#c4b4f1',
     },
+    secondary: {
+      main: '#000000',
+    },
   },
   typography: {
     fontFamily: 'HumanSans, Inter, Roboto, Helvetica, Arial, sans-serif',
@@ -44,6 +47,13 @@ export const theme = createTheme({
           fontWeight: 500,
           padding: '11px 30px 11px 30px',
           textTransform: 'none',
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '12px',
         },
       },
     },
