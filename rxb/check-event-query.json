@@ -1,0 +1,28 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "payload.trigger": "DAVINCI_QR_CODE_VALIDATOR_USE_TICKET"
+          }
+        },
+        {
+          "match": {
+            "payload.nftId": "{{event.payload.nftId}}"
+          }
+        },
+        {
+          "match": {
+            "payload.wallet": "{{event.payload.wallet}}"
+          }
+        },
+        {
+          "match": {
+            "payload.collectionId": "{{event.payload.collectionId}}"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "homepage": ".",
   "name": "qr-scanner-rxb",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
+  "repository": "git://github.com/cere-io/nft-marketplace-client",
   "dependencies": {
     "@cere/sdk-js": "^5.11.1",
     "@emotion/react": "^11.11.4",
