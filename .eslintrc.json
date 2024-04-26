@@ -1,0 +1,9 @@
+{
+  "extends": ["react-app", "plugin:mobx/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "warn",
+    "mobx/missing-observer": "off",
+    "mobx/exhaustive-make-observable": "off"
+  }
+}
