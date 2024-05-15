@@ -13,6 +13,6 @@ export class AppStore {
     this.notificationStore = new NotificationStore();
     this.userStore = new UserStore(this.notificationStore);
     this.eventStore = new EventStore(this.notificationStore, this.userStore);
-    this.scannerStore = new ScannerStore(this.notificationStore, this.userStore);
+    this.scannerStore = new ScannerStore(this.eventStore, this.userStore);
   }
 }
