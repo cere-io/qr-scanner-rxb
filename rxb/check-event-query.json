@@ -1,25 +1,21 @@
 {
+  "size": 1000,
   "query": {
     "bool": {
-      "must": [
+      "filter": [
         {
           "match": {
-            "payload.trigger": "DAVINCI_QR_CODE_VALIDATOR_USE_TICKET"
+            "event_type": "DAVINCI_QR_CODE_VALIDATOR_USE_TICKET"
           }
         },
         {
           "match": {
-            "payload.nftId": "{{event.payload.nftId}}"
+            "payload.eventId": "{{event.payload.eventId}}"
           }
         },
         {
           "match": {
             "payload.wallet": "{{event.payload.wallet}}"
-          }
-        },
-        {
-          "match": {
-            "payload.collectionId": "{{event.payload.collectionId}}"
           }
         }
       ]
