@@ -4,6 +4,10 @@
 
 -
 
+### v1.1.0
+
+- Add sending nft list of the event to the check rxb event
+
 ### v1.0.0
 
 - Product ready version
