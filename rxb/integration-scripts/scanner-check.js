@@ -49,7 +49,7 @@ async function getNftForUsing(eventNfts, wallet, usedNfts) {
     throw new Error(`Cannot get onwned nfts for the wallet ${wallet}`);
   }
 
-  const enrichedEventNfts = eventNfts?.map((eventNft) => {
+  const enrichedEventNfts = (eventNfts || [])?.map((eventNft) => {
     const walletCount = userNfts
       .filter(
         (userNft) =>
