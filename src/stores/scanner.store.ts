@@ -5,15 +5,16 @@ import {makeAutoObservable, reaction} from 'mobx';
 import {UserStore} from './user.store';
 import {SdkTriggerEnum} from '../enums/sdk-trigger.enum';
 import {ScannerStatusEnum} from '../enums/scanner-status.enum';
-import {NotificationStore} from './notification.store';
+import {EventStore} from './event.store';
 
 export class ScannerStore {
   private _eventSubscription: UnsubscribeEngagementHandler | undefined;
   private _scanResult: Record<string, any> | undefined;
   private _status: ScannerStatusEnum = ScannerStatusEnum.INIT;
   private _errorMessage: string | undefined = undefined;
+  private _nftForUsing: {collectionId: string; nftId: string} | undefined;
   constructor(
-    private notificationStore: NotificationStore,
+    private eventStore: EventStore,
     private userStore: UserStore,
   ) {
     makeAutoObservable(this);
@@ -36,6 +37,10 @@ export class ScannerStore {
             if (response.trigger === SdkTriggerEnum.TICKET_CHECK) {
               if (response?.data?.result === true) {
                 this._status = ScannerStatusEnum.SUCCESS;
+                this._nftForUsing = {
+                  collectionId: response?.data?.data?.collectionId,
+                  nftId: response?.data?.data?.nftId,
+                };
               } else if (response?.data?.result === false) {
                 this._throwError(response?.data?.errorMessage);
               } else {
@@ -67,8 +72,16 @@ export class ScannerStore {
       return;
     }
 
+    const eventData = this.eventStore.events?.find((e) => e.id === eventId);
+    // @ts-ignore
+    const eventNfts = (eventData?.nfts || [])
+      .filter((nft: {cmsNft?: {collection: string; nftId: string}}) => nft?.cmsNft?.collection && nft?.cmsNft?.nftId)
+      .map((nft: {cmsNft: {collection: string; nftId: string}}) => ({
+        collection: nft.cmsNft.collection,
+        nftId: nft.cmsNft.nftId,
+      }));
     const trigger = SdkTriggerEnum.TICKET_CHECK;
-    this.userStore.sdkInstance?.sendEvent(trigger, {...data, trigger});
+    this.userStore.sdkInstance?.sendEvent(trigger, {...data, trigger, eventNfts});
     this._status = ScannerStatusEnum.PROCESSING;
     this._scanResult = data;
   }
@@ -80,12 +93,18 @@ export class ScannerStore {
     this._status = ScannerStatusEnum.READY;
     this._scanResult = undefined;
     this._errorMessage = undefined;
+    this._nftForUsing = undefined;
   }
 
   public useTicket(): void {
     if (this._status === ScannerStatusEnum.SUCCESS) {
       const trigger = SdkTriggerEnum.TICKET_USE;
-      this.userStore.sdkInstance?.sendEvent(trigger, {...this._scanResult, trigger});
+      this.userStore.sdkInstance?.sendEvent(trigger, {
+        ...this._scanResult,
+        collectionId: this._nftForUsing?.collectionId,
+        nftId: this._nftForUsing?.nftId,
+        trigger,
+      });
       this._status = ScannerStatusEnum.USE_TICKET_PROCESSING;
     }
   }

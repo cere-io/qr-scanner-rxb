@@ -1,3 +1,7 @@
+function compareInLowerCase(a, b) {
+  return String(a).toLowerCase() === String(b).toLowerCase();
+}
+
 function getFreeportOwnedNfts(wallet) {
   if (!wallet) {
     throw new Error('Wallet address is not defined');
@@ -37,7 +41,7 @@ function getFreeportOwnedNfts(wallet) {
   });
 }
 
-async function checkData(collectionId, nftId, wallet, usedTicketCount) {
+async function getNftForUsing(eventNfts, wallet, usedNfts) {
   let userNfts;
   try {
     userNfts = await getFreeportOwnedNfts(wallet);
@@ -45,30 +49,40 @@ async function checkData(collectionId, nftId, wallet, usedTicketCount) {
     throw new Error(`Cannot get onwned nfts for the wallet ${wallet}`);
   }
 
-  const userNft = userNfts.find(
-    (nft) => nft.collection.address.toLowerCase() === collectionId.toLowerCase() && nft.nftId === nftId,
-  );
-  if (!userNft) {
-    throw new Error(`Wallet doesn't have this NFT`);
+  const enrichedEventNfts = (eventNfts || [])?.map((eventNft) => {
+    const walletCount = userNfts
+      .filter(
+        (userNft) =>
+          userNft?.nftId === eventNft.nftId && compareInLowerCase(userNft?.collection?.address, eventNft.collection),
+      )
+      .map((userNft) => userNft.balance)
+      .reduce((acc, val) => +val + acc, 0);
+
+    const walletUsedCount = usedNfts.filter(
+      (nft) => nft.nftId === eventNft.nftId && compareInLowerCase(nft.collectionId, eventNft.collection),
+    ).length;
+
+    return {...eventNft, walletCount, walletUsedCount};
+  });
+
+  const result = enrichedEventNfts.find((nft) => nft.walletCount > nft.walletUsedCount);
+
+  if (!result) {
+    throw new Error(`Wallet doesn't any unused NFT for this event`);
   }
 
-  if (usedTicketCount >= userNft?.balance) {
-    throw new Error(`The number of tickets used is greater than the number of tickets the user has`);
-  }
-
-  return {userNft};
+  return result;
 }
 
 sdk.transform(async (params) => {
   let errorMessage;
-  const collectionId = params.event.payload?.collectionId;
-  const nftId = params.event.payload?.nftId;
   const wallet = params.event.payload?.wallet;
-  const usedTicketCount = params.queryData[0]?.hits?.total?.value || 0;
+  const eventNfts = params.event.payload?.eventNfts;
+  const usedNfts = (params.queryData[0]?.hits?.hits || []).map((hit) => hit?._source?.payload);
 
   let checkResult;
   try {
-    checkResult = await checkData(collectionId, nftId, wallet, usedTicketCount);
+    checkResult = await getNftForUsing(eventNfts, wallet, usedNfts);
   } catch (e) {
     errorMessage = e?.message || JSON.stringify(e);
   }
@@ -79,7 +93,12 @@ sdk.transform(async (params) => {
         errorMessage,
       }
     : {
-        data: {collectionId, nftId, wallet, checkResult, usedTicketCount},
+        data: {
+          collectionId: checkResult.collection,
+          nftId: checkResult.nftId,
+          walletCount: checkResult.walletCount,
+          walletUsedCount: checkResult.walletUsedCount,
+        },
         result: true,
       };
 
