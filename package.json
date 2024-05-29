@@ -25,6 +25,7 @@
     "react-qr-reader": "^3.0.0-beta-1",
     "react-router-dom": "^6.22.3",
     "use-permission": "^2.0.1",
+    "uuid": "^9.0.1",
     "yup": "^1.4.0"
   },
   "scripts": {
@@ -37,7 +38,7 @@
     "format": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && prettier --write ./ ",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" && prettier --check ./ ",
     "check-types": "tsc --noEmit",
-    "rxb:migration:sync": "node --env-file=.env -r ts-node/register ./src/scripts/migration-script.ts"
+    "rxb:migration:sync": "node --env-file=./migration/.env -r ts-node/register ./migration/migration-script.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -62,6 +63,7 @@
     "@types/object-hash": "^3.0.6",
     "@types/react": "^17.0.78",
     "@types/react-dom": "^17.0.24",
+    "@types/uuid": "^9.0.8",
     "eslint": "^8.57.0",
     "eslint-plugin-mobx": "^0.0.9",
     "eslint-plugin-prettier": "^5.1.3",
