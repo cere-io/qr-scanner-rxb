@@ -4,6 +4,10 @@
 
 -
 
+### v1.1.1
+
+- Add delay before sending permission event
+
 ### v1.1.0
 
 - Add sending nft list of the event to the check rxb event
