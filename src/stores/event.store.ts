@@ -28,7 +28,7 @@ export class EventStore {
     );
     reaction(
       () => !!this.userStore.sdkInstance,
-      () => {
+      async () => {
         const trigger = SdkTriggerEnum.PERMISSIONS;
         this._eventSubscription?.(); // unsubscribe
 
@@ -44,7 +44,7 @@ export class EventStore {
             console.error("Cannot parse response from sdk, it's not a JSON format");
           }
         }, {});
-
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // TODO attempt to fix bug https://cere-network.slack.com/archives/C02748RGX3M/p1723021900944829?thread_ts=1723003606.830809&cid=C02748RGX3M
         this.userStore.sdkInstance?.sendEvent(trigger, {trigger});
       },
     );
